@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Structure : MonoBehaviour {
 
+	//create Tile class
 	public class Tile{
 		float Health;
 		int x;
@@ -18,6 +19,7 @@ public class Structure : MonoBehaviour {
 		}
 	}
 
+	//variable for tiles (currently unused), slots and pirates
 	public Tile[,] supportTiles;
 	public int slots;
 	public int minPirates;
@@ -25,8 +27,11 @@ public class Structure : MonoBehaviour {
 	public bool active;
 	public GameObject slot;
 
+	public GameObject gameManager;
+
+	//set up slots based on number of available slots
 	public void CreateSlots(){
-		for (int i = 0; i < slots + 1; i++) {
+		for (int i = 0; i < slots; i++) {
 			GameObject newSlot = slot;
 			float z = gameObject.transform.position.z - 0.7f;
 			float x = gameObject.transform.position.x + (-0.4f + (i * 0.4f));
@@ -36,9 +41,9 @@ public class Structure : MonoBehaviour {
 	}
 
 
+
 	// Use this for initialization
 	void Start () {
-		
 	}
 	
 	// Update is called once per frame

@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Slot : MonoBehaviour {
 
+	public GameObject gameManager;
 	public bool filled;
 	public Sprite sprFilled;
 	public Sprite sprEmpty;
@@ -11,35 +12,41 @@ public class Slot : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		int pirates = GetComponentInParent<Cannon> ().currentPirates;
-		int slots = GetComponentInParent<Cannon> ().slots;
-		Debug.Log ("parent slots" + GetComponentInParent<Cannon> ().slots);
-		Debug.Log ("slots" + slots);
+		//get number of active pirates and slots from parent structure
+		pirates = GetComponentInParent<Structure> ().currentPirates;
+		slots = GetComponentInParent<Structure> ().slots;
+
+		gameManager = GameObject.FindWithTag("GameController");
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Debug.Log ("parent slots" + GetComponentInParent<Cannon> ().slots);
-		Debug.Log ("slots" + slots);
+		
 	}
 
+	//if clicked and filled, remove pirate and add it to the parents available pirates
 	void OnMouseDown(){
-		Debug.Log ("pirates" + pirates);
-		Debug.Log ("slots" + slots);
+		pirates = GetComponentInParent<Structure> ().currentPirates;
 		if (filled) {
-			Debug.Log ("Removing a pirate");
 			filled = false;
 			GetComponentInChildren<SpriteRenderer> ().sprite = sprEmpty;
-			pirates--;
+			pirates-=1;
+			gameManager.GetComponent<GameManager> ().freePirates += 1;
 
 		} else {
-			if (pirates < slots) {
+			//if clicked and empty, add a pirate and remove from parents available pirates
+			if ((pirates < slots) && (gameManager.GetComponent<GameManager> ().freePirates > 0))
+			 {
 				Debug.Log ("Adding a pirate");
 				filled = true;
 				GetComponentInChildren<SpriteRenderer> ().sprite = sprFilled;
-				pirates++;
+				pirates+=1;
+				gameManager.GetComponent<GameManager> ().freePirates -= 1;
 			}
 		}
+		//update parents active pirates
+		GetComponentInParent<Structure> ().currentPirates = pirates;
 	}
 
 
